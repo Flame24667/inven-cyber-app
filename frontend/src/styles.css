@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family:
+      Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+      sans-serif;
+    background:
+      radial-gradient(circle at top left, rgba(32, 217, 255, 0.12), transparent 32rem),
+      radial-gradient(circle at bottom right, rgba(40, 245, 181, 0.1), transparent 34rem),
+      #02080c;
+    color: #f3fbff;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+}
+
+@layer components {
+  .input {
+    @apply w-full rounded-lg border border-cyber-line bg-cyber-black/70 px-3 py-2 text-cyber-white outline-none transition placeholder:text-cyber-dim focus:border-cyber-green;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-cyber-green bg-cyber-green px-4 py-2 font-semibold text-cyber-black transition hover:bg-transparent hover:text-cyber-green disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .icon-btn {
+    @apply grid h-10 w-10 place-items-center rounded-lg border border-cyber-line bg-cyber-panel/80 text-cyber-green transition hover:border-cyber-green hover:bg-cyber-panel2;
+  }
+
+  .small-btn {
+    @apply inline-flex items-center gap-1 rounded-md border border-cyber-green px-2 py-1 text-xs text-cyber-green transition hover:bg-cyber-green hover:text-cyber-black;
+  }
+
+  .small-btn.danger {
+    @apply border-cyber-danger text-cyber-danger hover:bg-cyber-danger hover:text-cyber-black;
+  }
+
+  .table-wrap {
+    @apply overflow-x-auto;
+  }
+
+  .data-table {
+    @apply w-full min-w-[820px] border-collapse text-left text-sm;
+  }
+
+  .data-table th {
+    @apply border-b border-cyber-line bg-cyber-panel2/70 px-3 py-3 text-xs uppercase text-cyber-dim;
+  }
+
+  .data-table td {
+    @apply border-b border-cyber-line px-3 py-3 align-top text-cyber-white;
+  }
+
+  .enterprise-shell {
+    @apply min-h-screen bg-cyber-black text-cyber-white;
+    background:
+      linear-gradient(rgba(32, 217, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(32, 217, 255, 0.03) 1px, transparent 1px),
+      radial-gradient(circle at 18% 8%, rgba(32, 217, 255, 0.16), transparent 28rem),
+      radial-gradient(circle at 88% 18%, rgba(138, 92, 255, 0.12), transparent 28rem),
+      #02080c;
+    background-size: 52px 52px, 52px 52px, auto, auto, auto;
+  }
+
+  .glass-panel {
+    @apply rounded-lg border border-cyber-line bg-cyber-panel/85 backdrop-blur-xl;
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.22);
+  }
+
+  .metric-card {
+    @apply relative overflow-hidden rounded-lg border bg-cyber-panel/80 p-4 backdrop-blur-xl;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.2);
+  }
+
+  .metric-card::before {
+    content: "";
+    @apply absolute inset-x-0 top-0 h-px opacity-80;
+    background: linear-gradient(90deg, transparent, var(--card-accent), transparent);
+  }
+
+  .sparkline {
+    clip-path: polygon(0 72%, 12% 65%, 24% 68%, 36% 52%, 48% 58%, 60% 44%, 72% 48%, 84% 28%, 100% 16%, 100% 100%, 0 100%);
+  }
+
+  .sankey-band {
+    @apply absolute rounded-full blur-[1px];
+    height: 38px;
+    transform-origin: left center;
+  }
+
+  .category-bubble {
+    @apply absolute grid h-24 w-24 place-items-center rounded-full border bg-cyber-black/80 p-3 text-center;
+  }
+
+  .category-bubble-0 {
+    @apply right-6 top-7 border-cyber-orange text-cyber-orange;
+  }
+
+  .category-bubble-1 {
+    @apply bottom-4 right-20 border-cyber-purple text-cyber-purple;
+  }
+
+  .category-bubble-2 {
+    @apply bottom-6 left-14 border-cyber-blue text-cyber-blue;
+  }
+
+  .category-bubble-3 {
+    @apply left-3 top-14 border-cyber-cyan text-cyber-cyan;
+  }
+}
