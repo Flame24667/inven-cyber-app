@@ -149,6 +149,38 @@ function App() {
     }
   }
 
+  async function handleUpdateItem(id, payload) {
+    setLoading(true)
+    setMessage("")
+
+    try {
+      const updated = await api.updateItem(id, payload)
+      await loadData()
+      return updated
+    } catch (error) {
+      setMessage(error.message)
+      throw error
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function handleDeleteItem(id) {
+    setLoading(true)
+    setMessage("")
+
+    try {
+      await api.deleteItem(id)
+      await loadData()
+      setMessage("Item has been removed successfully.")
+    } catch (error) {
+      setMessage(error.message)
+      throw error
+    } finally {
+      setLoading(false)
+    }
+  }
+
   async function handleCreateLoan(event) {
     event.preventDefault()
     setLoading(true)
@@ -254,6 +286,8 @@ function App() {
           itemForm={itemForm}
           setItemForm={setItemForm}
           onCreateItem={handleCreateItem}
+          onUpdateItem={handleUpdateItem}
+          onDeleteItem={handleDeleteItem}
           loading={loading}
           searchQuery={searchQuery}
         />

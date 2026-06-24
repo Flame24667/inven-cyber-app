@@ -4,19 +4,64 @@ import { api } from "../services/api"
 import { formatDate } from "../utils/date"
 import { EmptyState, Field, Modal, Panel, Status, Textarea } from "../components/ui"
 
-export function InventoryPage({ items, isAdmin, itemForm, setItemForm, onCreateItem, onDeleteItem, loading, searchQuery }) {
+export function InventoryPage({ items, isAdmin, itemForm, setItemForm, onCreateItem, onUpdateItem, onDeleteItem, loading, searchQuery }) {
   const [detail, setDetail] = useState(null)
   const [detailError, setDetailError] = useState("")
   const [actionError, setActionError] = useState("")
+  const [isEditingNotes, setIsEditingNotes] = useState(false)
+  const [notesDraft, setNotesDraft] = useState("")
 
   async function openDetail(itemId) {
     setDetailError("")
     setActionError("")
+    setIsEditingNotes(false)
     try {
-      setDetail(await api.itemDetail(itemId))
+      const fetched = await api.itemDetail(itemId)
+      setDetail(fetched)
+      setNotesDraft(fetched.notes || "")
     } catch (error) {
       setDetailError(error.message)
     }
+  }
+
+  async function changeQuantity(delta) {
+    if (!detail) return
+    const nextQty = detail.quantity + delta
+    if (nextQty < 0) return
+
+    setDetailError("")
+    setActionError("")
+
+    try {
+      await onUpdateItem(detail.id, { quantity: nextQty })
+      const updated = await api.itemDetail(detail.id)
+      setDetail(updated)
+      setNotesDraft(updated.notes || "")
+    } catch (error) {
+      setActionError(error.message)
+    }
+  }
+
+  async function saveNotes() {
+    if (!detail) return
+
+    setDetailError("")
+    setActionError("")
+
+    try {
+      await onUpdateItem(detail.id, { notes: notesDraft })
+      const updated = await api.itemDetail(detail.id)
+      setDetail(updated)
+      setNotesDraft(updated.notes || "")
+      setIsEditingNotes(false)
+    } catch (error) {
+      setActionError(error.message)
+    }
+  }
+
+  function cancelNotesEdit() {
+    setIsEditingNotes(false)
+    setNotesDraft(detail?.notes || "")
   }
 
   async function removeItem(itemId) {
@@ -118,19 +163,48 @@ export function InventoryPage({ items, isAdmin, itemForm, setItemForm, onCreateI
         )}
       </Panel>
 
-      {detail && <ItemDetailModal item={detail} onClose={() => setDetail(null)} />}
+      {detail && (
+        <ItemDetailModal
+          item={detail}
+          onClose={() => setDetail(null)}
+          onChangeQuantity={changeQuantity}
+          isAdmin={isAdmin}
+          isEditingNotes={isEditingNotes}
+          notesDraft={notesDraft}
+          setNotesDraft={setNotesDraft}
+          onStartNotesEdit={() => setIsEditingNotes(true)}
+          onCancelNotesEdit={cancelNotesEdit}
+          onSaveNotes={saveNotes}
+          loading={loading}
+        />
+      )}
     </section>
   )
 }
 
-function ItemDetailModal({ item, onClose }) {
+function ItemDetailModal({ item, onClose, onChangeQuantity, isAdmin, isEditingNotes, notesDraft, setNotesDraft, onStartNotesEdit, onCancelNotesEdit, onSaveNotes, loading }) {
   return (
     <Modal title={`Item Detail / ${item.name}`} onClose={onClose}>
       <div className="grid gap-4 md:grid-cols-3">
         <Detail label="Asset ID" value={item.asset_id} mono />
         <Detail label="Category" value={item.category} />
         <Detail label="Location" value={item.location} />
-        <Detail label="Quantity" value={item.quantity} />
+        <div className="border border-cyber-line bg-cyber-black p-3">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className="mb-2 text-sm text-cyber-dim">Quantity</p>
+              <p>{item.quantity}</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <button type="button" className="small-btn" onClick={() => onChangeQuantity(-1)} disabled={loading || item.quantity <= 0}>
+                -
+              </button>
+              <button type="button" className="small-btn" onClick={() => onChangeQuantity(1)} disabled={loading}>
+                +
+              </button>
+            </div>
+          </div>
+        </div>
         <Detail label="Inbound Date" value={formatDate(item.incoming_at)} />
         <Detail label="Outbound Date" value={formatDate(item.outgoing_at)} />
       </div>
@@ -140,9 +214,36 @@ function ItemDetailModal({ item, onClose }) {
         <Status status={item.status} />
       </div>
 
-      <div className="mt-4 border border-cyber-line bg-cyber-black p-3">
-        <p className="mb-2 text-sm text-cyber-dim">Notes</p>
-        <p className="text-sm text-cyber-white">{item.notes || "-"}</p>
+      <div className="mt-4 border border-cyber-line bg-cyber-black p-3 space-y-3">
+        <div className="flex items-start justify-between gap-4">
+          <p className="mb-2 text-sm text-cyber-dim">Notes</p>
+          <div className="flex items-center gap-2">
+            {!isEditingNotes ? (
+              <button type="button" className="small-btn" onClick={onStartNotesEdit} disabled={loading}>
+                Edit
+              </button>
+            ) : (
+              <>
+                <button type="button" className="small-btn" onClick={onCancelNotesEdit} disabled={loading}>
+                  Cancel
+                </button>
+                <button type="button" className="small-btn" onClick={onSaveNotes} disabled={loading}>
+                  Save
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+
+        {!isEditingNotes ? (
+          <p className="text-sm text-cyber-white whitespace-pre-wrap">{item.notes || "-"}</p>
+        ) : (
+          <textarea
+            className="input min-h-24 w-full"
+            value={notesDraft}
+            onChange={(event) => setNotesDraft(event.target.value)}
+          />
+        )}
       </div>
 
       <div className="mt-5">
