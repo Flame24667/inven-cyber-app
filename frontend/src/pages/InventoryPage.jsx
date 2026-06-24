@@ -4,16 +4,33 @@ import { api } from "../services/api"
 import { formatDate } from "../utils/date"
 import { EmptyState, Field, Modal, Panel, Status, Textarea } from "../components/ui"
 
-export function InventoryPage({ items, isAdmin, itemForm, setItemForm, onCreateItem, loading, searchQuery }) {
+export function InventoryPage({ items, isAdmin, itemForm, setItemForm, onCreateItem, onDeleteItem, loading, searchQuery }) {
   const [detail, setDetail] = useState(null)
   const [detailError, setDetailError] = useState("")
+  const [actionError, setActionError] = useState("")
 
   async function openDetail(itemId) {
     setDetailError("")
+    setActionError("")
     try {
       setDetail(await api.itemDetail(itemId))
     } catch (error) {
       setDetailError(error.message)
+    }
+  }
+
+  async function removeItem(itemId) {
+    setDetailError("")
+    setActionError("")
+
+    if (!window.confirm("Are you sure you want to remove this item?")) {
+      return
+    }
+
+    try {
+      await onDeleteItem(itemId)
+    } catch (error) {
+      setActionError(error.message)
     }
   }
 
@@ -44,6 +61,7 @@ export function InventoryPage({ items, isAdmin, itemForm, setItemForm, onCreateI
           <span className="rounded-lg border border-cyber-line px-3 py-1 text-sm text-cyber-dim">Main Warehouse</span>
         </div>
         {detailError && <p className="mb-4 border border-cyber-danger px-3 py-2 text-sm text-cyber-danger">{detailError}</p>}
+        {actionError && <p className="mb-4 border border-cyber-danger px-3 py-2 text-sm text-cyber-danger">{actionError}</p>}
         {items.length === 0 ? (
           <EmptyState
             icon={<FiBox />}
@@ -82,7 +100,16 @@ export function InventoryPage({ items, isAdmin, itemForm, setItemForm, onCreateI
                     <td>{formatDate(item.incoming_at)}</td>
                     <td>{formatDate(item.outgoing_at)}</td>
                     <td><Status status={item.status} /></td>
-                    <td><button className="small-btn" onClick={() => openDetail(item.id)}>Detail</button></td>
+                    <td>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <button className="small-btn" onClick={() => openDetail(item.id)}>Detail</button>
+                        {isAdmin && (
+                          <button className="small-btn danger" onClick={() => removeItem(item.id)} disabled={loading}>
+                            Remove
+                          </button>
+                        )}
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
