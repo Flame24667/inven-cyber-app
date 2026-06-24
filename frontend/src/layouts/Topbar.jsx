@@ -19,7 +19,7 @@ export function Topbar({ user, loading, onRefresh, onLogout, activeTitle, search
             <FiSearch className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-cyber-dim" />
             <input
               className="input pl-10"
-              placeholder="Search item, SKU, borrower..."
+              placeholder="Search item, Asset ID, borrower..."
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
             />

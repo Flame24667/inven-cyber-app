@@ -1,5 +1,6 @@
-import { FiShield, FiUser } from "react-icons/fi"
-import { Field } from "./ui"
+import { FiUser } from "react-icons/fi"
+import iconApp from "../assets/icon/icon_app.png"
+import { Field, SelectField } from "./ui"
 
 export function AuthPage({ authMode, authForm, setAuthForm, onSubmit, onToggleMode, loading, message }) {
   return (
@@ -10,7 +11,7 @@ export function AuthPage({ authMode, authForm, setAuthForm, onSubmit, onToggleMo
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(37,242,155,0.18),transparent_34%),linear-gradient(135deg,rgba(5,8,7,0.15),#050807_70%)]" />
           <div className="relative max-w-2xl">
             <div className="mb-6 inline-flex items-center gap-2 border border-cyber-line bg-cyber-panel px-3 py-2 text-sm text-cyber-green">
-              <FiShield /> Cyber Inventory Control
+              <img src={iconApp} alt="Cyber Inventory icon" className="h-5 w-5 object-contain" /> Cyber Inventory Control
             </div>
             <h1 className="text-4xl font-semibold tracking-normal text-cyber-white sm:text-6xl">
               Secure inventory operations.
@@ -34,13 +35,17 @@ export function AuthPage({ authMode, authForm, setAuthForm, onSubmit, onToggleMo
             {authMode === "register" && (
               <>
                 <Field label="Name" value={authForm.name} onChange={(value) => setAuthForm({ ...authForm, name: value })} />
-                <label className="mb-4 block">
-                  <span className="mb-2 block text-sm text-cyber-dim">Role</span>
-                  <select className="input" value={authForm.role} onChange={(event) => setAuthForm({ ...authForm, role: event.target.value })}>
-                    <option value="staff">Staff</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                </label>
+                <div className="mb-4">
+                  <SelectField
+                    label="Role"
+                    value={authForm.role}
+                    onChange={(value) => setAuthForm({ ...authForm, role: value })}
+                    options={[
+                      { value: "staff", label: "Staff" },
+                      { value: "admin", label: "Admin" },
+                    ]}
+                  />
+                </div>
               </>
             )}
 
@@ -50,7 +55,7 @@ export function AuthPage({ authMode, authForm, setAuthForm, onSubmit, onToggleMo
               type="password"
               value={authForm.password}
               minLength={6}
-              maxLength={72}
+              maxLength={128}
               autoComplete={authMode === "login" ? "current-password" : "new-password"}
               onChange={(value) => setAuthForm({ ...authForm, password: value })}
             />

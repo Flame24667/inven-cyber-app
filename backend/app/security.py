@@ -8,12 +8,12 @@ from app.config import get_settings
 
 
 settings = get_settings()
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 
 
 def ensure_password_supported(password: str) -> str:
-    if len(password.encode("utf-8")) > 72:
-        raise ValueError("Password cannot exceed 72 bytes.")
+    if len(password) > 128:
+        raise ValueError("Password cannot exceed 128 characters.")
     return password
 
 

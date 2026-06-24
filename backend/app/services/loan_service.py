@@ -19,9 +19,10 @@ def list_loans(db: Database) -> list[dict]:
 
 def request_loan(db: Database, payload: LoanCreate, current_user: dict) -> dict:
     item = get_item(db, payload.item_id)
+    borrowed_at = payload.borrowed_at or now_utc()
     if payload.quantity > item["quantity"]:
         raise HTTPException(status_code=400, detail="Requested quantity exceeds stock")
-    if payload.expected_return_at <= payload.borrowed_at:
+    if payload.expected_return_at <= borrowed_at:
         raise HTTPException(status_code=400, detail="Expected return must be after borrowed date")
 
     document = build_loan_document(payload, item, object_id(current_user["id"]))
@@ -80,7 +81,7 @@ def return_loan(db: Database, loan_id: str, payload: LoanReturn) -> dict:
         {
             "$set": {
                 "status": LoanStatus.returned,
-                "returned_at": payload.returned_at,
+                "returned_at": now,
                 "return_notes": payload.return_notes,
                 "updated_at": now,
             }

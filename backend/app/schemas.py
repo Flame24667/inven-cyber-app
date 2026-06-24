@@ -28,7 +28,7 @@ class LoanStatus(str, Enum):
 class UserCreate(BaseModel):
     name: str = Field(min_length=2, max_length=120)
     email: EmailStr
-    password: str = Field(min_length=6)
+    password: str = Field(min_length=6, max_length=128)
     role: Role = Role.staff
 
     @field_validator("password")
@@ -39,7 +39,7 @@ class UserCreate(BaseModel):
 
 class LoginRequest(BaseModel):
     email: EmailStr
-    password: str = Field(min_length=6)
+    password: str = Field(min_length=6, max_length=128)
 
     @field_validator("password")
     @classmethod
@@ -61,13 +61,12 @@ class AuthResponse(BaseModel):
 
 
 class ItemCreate(BaseModel):
-    sku: str = Field(min_length=2, max_length=50)
+    asset_id: str = Field(min_length=2, max_length=50)
     name: str = Field(min_length=2, max_length=120)
     category: str = Field(min_length=2, max_length=80)
     location: str = Field(min_length=2, max_length=120)
     quantity: int = Field(ge=0)
-    incoming_at: datetime
-    outgoing_at: Optional[datetime] = None
+    incoming_at: Optional[datetime] = None
     notes: Optional[str] = Field(default=None, max_length=500)
 
 
@@ -83,7 +82,7 @@ class ItemUpdate(BaseModel):
 
 class ItemResponse(BaseModel):
     id: str
-    sku: str
+    asset_id: str
     name: str
     category: str
     location: str
@@ -101,7 +100,7 @@ class LoanCreate(BaseModel):
     borrower_name: str = Field(min_length=2, max_length=120)
     borrower_division: str = Field(min_length=2, max_length=120)
     quantity: int = Field(ge=1)
-    borrowed_at: datetime
+    borrowed_at: Optional[datetime] = None
     expected_return_at: datetime
     notes: Optional[str] = Field(default=None, max_length=500)
 
@@ -112,7 +111,6 @@ class LoanDecision(BaseModel):
 
 
 class LoanReturn(BaseModel):
-    returned_at: datetime
     return_notes: Optional[str] = Field(default=None, max_length=500)
 
 

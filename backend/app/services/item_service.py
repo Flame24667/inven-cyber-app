@@ -31,8 +31,9 @@ def get_item_detail(db: Database, item_id: str) -> dict:
 
 
 def create_item(db: Database, payload: ItemCreate, current_user: dict) -> dict:
-    if db.items.find_one({"sku": payload.sku.upper()}):
-        raise HTTPException(status_code=409, detail="SKU already exists")
+    asset_id = payload.asset_id.upper()
+    if db.items.find_one({"$or": [{"asset_id": asset_id}, {"sku": asset_id}]}):
+        raise HTTPException(status_code=409, detail="Asset ID already exists")
 
     document = build_item_document(payload, object_id(current_user["id"]))
     result = db.items.insert_one(document)

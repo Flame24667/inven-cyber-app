@@ -91,33 +91,4 @@
     background: linear-gradient(90deg, transparent, var(--card-accent), transparent);
   }
 
-  .sparkline {
-    clip-path: polygon(0 72%, 12% 65%, 24% 68%, 36% 52%, 48% 58%, 60% 44%, 72% 48%, 84% 28%, 100% 16%, 100% 100%, 0 100%);
-  }
-
-  .sankey-band {
-    @apply absolute rounded-full blur-[1px];
-    height: 38px;
-    transform-origin: left center;
-  }
-
-  .category-bubble {
-    @apply absolute grid h-24 w-24 place-items-center rounded-full border bg-cyber-black/80 p-3 text-center;
-  }
-
-  .category-bubble-0 {
-    @apply right-6 top-7 border-cyber-orange text-cyber-orange;
-  }
-
-  .category-bubble-1 {
-    @apply bottom-4 right-20 border-cyber-purple text-cyber-purple;
-  }
-
-  .category-bubble-2 {
-    @apply bottom-6 left-14 border-cyber-blue text-cyber-blue;
-  }
-
-  .category-bubble-3 {
-    @apply left-3 top-14 border-cyber-cyan text-cyber-cyan;
-  }
 }

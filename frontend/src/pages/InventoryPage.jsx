@@ -22,14 +22,15 @@ export function InventoryPage({ items, isAdmin, itemForm, setItemForm, onCreateI
       {isAdmin && (
         <Panel title="Add Item" icon={<FiPlus />}>
           <form onSubmit={onCreateItem} className="grid gap-4">
-            <Field label="SKU" value={itemForm.sku} onChange={(value) => setItemForm({ ...itemForm, sku: value })} />
+            <Field label="Asset ID" value={itemForm.asset_id} onChange={(value) => setItemForm({ ...itemForm, asset_id: value })} />
             <Field label="Item Name" value={itemForm.name} onChange={(value) => setItemForm({ ...itemForm, name: value })} />
             <Field label="Category" value={itemForm.category} onChange={(value) => setItemForm({ ...itemForm, category: value })} />
             <Field label="Location" value={itemForm.location} onChange={(value) => setItemForm({ ...itemForm, location: value })} />
             <Field label="Quantity" type="number" value={itemForm.quantity} onChange={(value) => setItemForm({ ...itemForm, quantity: value })} />
-            <Field label="Inbound Date" type="datetime-local" value={itemForm.incoming_at} onChange={(value) => setItemForm({ ...itemForm, incoming_at: value })} />
-            <Field label="Outbound Date" type="datetime-local" value={itemForm.outgoing_at} required={false} onChange={(value) => setItemForm({ ...itemForm, outgoing_at: value })} />
             <Textarea label="Notes" value={itemForm.notes} onChange={(value) => setItemForm({ ...itemForm, notes: value })} />
+            <p className="rounded-lg border border-cyber-line bg-cyber-black/40 px-3 py-2 text-xs leading-5 text-cyber-dim">
+              Inbound time is recorded automatically by the backend. Outbound time is recorded when a loan is approved.
+            </p>
             <button className="btn-primary" disabled={loading}>Save Item</button>
           </form>
         </Panel>
@@ -49,7 +50,7 @@ export function InventoryPage({ items, isAdmin, itemForm, setItemForm, onCreateI
             title={searchQuery ? "No matching items" : "No items yet"}
             description={
               searchQuery
-                ? "Try another item name, SKU, category, location, or status."
+                ? "Try another item name, Asset ID, category, location, or status."
                 : "Add the first asset record so dashboard metrics, loan requests, and approvals have inventory data."
             }
           />
@@ -58,7 +59,7 @@ export function InventoryPage({ items, isAdmin, itemForm, setItemForm, onCreateI
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>SKU</th>
+                  <th>Asset ID</th>
                   <th>Item</th>
                   <th>Location</th>
                   <th>Qty</th>
@@ -71,7 +72,7 @@ export function InventoryPage({ items, isAdmin, itemForm, setItemForm, onCreateI
               <tbody>
                 {items.map((item) => (
                   <tr key={item.id}>
-                    <td className="font-mono text-cyber-green">{item.sku}</td>
+                    <td className="font-mono text-cyber-green">{item.asset_id}</td>
                     <td>
                       <p className="font-medium">{item.name}</p>
                       <p className="text-xs text-cyber-dim">{item.category}</p>
@@ -99,7 +100,7 @@ function ItemDetailModal({ item, onClose }) {
   return (
     <Modal title={`Item Detail / ${item.name}`} onClose={onClose}>
       <div className="grid gap-4 md:grid-cols-3">
-        <Detail label="SKU" value={item.sku} mono />
+        <Detail label="Asset ID" value={item.asset_id} mono />
         <Detail label="Category" value={item.category} />
         <Detail label="Location" value={item.location} />
         <Detail label="Quantity" value={item.quantity} />

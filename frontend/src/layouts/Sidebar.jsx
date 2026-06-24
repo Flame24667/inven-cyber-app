@@ -8,9 +8,9 @@ import {
   FiLogOut,
   FiRefreshCw,
   FiSettings,
-  FiShield,
   FiUploadCloud,
 } from "react-icons/fi"
+import iconApp from "../assets/icon/icon_app.png"
 import { classNames } from "../utils/classNames"
 
 const navigation = [
@@ -24,8 +24,8 @@ export function Sidebar({ activeTab, setActiveTab, onRefresh, onLogout, stats })
   return (
     <aside className="glass-panel sticky top-4 hidden h-[calc(100vh-2rem)] w-64 shrink-0 flex-col overflow-hidden p-4 lg:flex">
       <div className="mb-8 flex items-center gap-3 px-2">
-        <div className="grid h-11 w-11 place-items-center rounded-lg border border-cyber-cyan bg-cyber-cyan/10 text-cyber-cyan">
-          <FiShield />
+        <div className="grid h-11 w-11 place-items-center overflow-hidden rounded-lg border border-cyber-cyan bg-cyber-cyan/10">
+          <img src={iconApp} alt="Inven app icon" className="h-8 w-8 object-contain" />
         </div>
         <div>
           <p className="text-xl font-semibold">INVEN</p>
@@ -74,14 +74,6 @@ export function Sidebar({ activeTab, setActiveTab, onRefresh, onLogout, stats })
         <button onClick={onLogout} className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-cyber-dim transition hover:bg-cyber-panel2 hover:text-cyber-danger">
           <FiLogOut /> Logout
         </button>
-      </div>
-
-      <div className="mt-4 rounded-lg border border-cyber-line bg-cyber-black/70 p-4">
-        <p className="text-sm text-cyber-dim">Warehouse</p>
-        <p className="mt-1 font-medium">Main Warehouse</p>
-        <div className="mt-4 grid aspect-square place-items-center rounded-lg border border-cyber-cyan/30 bg-cyber-cyan/5">
-          <div className="h-16 w-16 rotate-45 rounded-lg border border-cyber-cyan bg-cyber-cyan/10" />
-        </div>
       </div>
     </aside>
   )

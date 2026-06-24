@@ -9,13 +9,11 @@ import { api } from "./services/api"
 import { toIsoLocal } from "./utils/date"
 
 const emptyItem = {
-  sku: "",
+  asset_id: "",
   name: "",
   category: "",
   location: "",
   quantity: 1,
-  incoming_at: "",
-  outgoing_at: "",
   notes: "",
 }
 
@@ -24,7 +22,6 @@ const emptyLoan = {
   borrower_name: "",
   borrower_division: "",
   quantity: 1,
-  borrowed_at: "",
   expected_return_at: "",
   notes: "",
 }
@@ -57,7 +54,7 @@ function App() {
     if (!query) return items
 
     return items.filter((item) =>
-      [item.sku, item.name, item.category, item.location, item.status]
+      [item.asset_id, item.name, item.category, item.location, item.status]
         .filter(Boolean)
         .some((value) => String(value).toLowerCase().includes(query)),
     )
@@ -141,8 +138,6 @@ function App() {
       await api.createItem({
         ...itemForm,
         quantity: Number(itemForm.quantity),
-        incoming_at: toIsoLocal(itemForm.incoming_at),
-        outgoing_at: toIsoLocal(itemForm.outgoing_at),
       })
       setItemForm(emptyItem)
       await loadData()
@@ -163,7 +158,6 @@ function App() {
       await api.createLoan({
         ...loanForm,
         quantity: Number(loanForm.quantity),
-        borrowed_at: toIsoLocal(loanForm.borrowed_at),
         expected_return_at: toIsoLocal(loanForm.expected_return_at),
       })
       setLoanForm(emptyLoan)
@@ -199,7 +193,6 @@ function App() {
 
     try {
       await api.returnLoan(id, {
-        returned_at: new Date().toISOString(),
         return_notes: "Item has been returned",
       })
       await loadData()
@@ -249,7 +242,6 @@ function App() {
         <DashboardPage
           items={filteredItems}
           loans={filteredLoans}
-          stats={stats}
           setActiveTab={setActiveTab}
           searchQuery={searchQuery}
         />

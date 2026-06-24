@@ -1,27 +1,30 @@
 import { FiClock, FiInbox, FiUploadCloud } from "react-icons/fi"
 import { formatDate } from "../utils/date"
-import { EmptyState, Field, Panel, Status, Textarea } from "../components/ui"
+import { DateTimeField, EmptyState, Field, Panel, SelectField, Status, Textarea } from "../components/ui"
 
 export function LoansPage({ items, loans, isAdmin, loanForm, setLoanForm, onCreateLoan, onReturn, loading, searchQuery }) {
   return (
     <section className="grid gap-6 lg:grid-cols-[380px_1fr]">
       <Panel title="Request Loan" icon={<FiUploadCloud />}>
         <form onSubmit={onCreateLoan} className="grid gap-4">
-          <label>
-            <span className="mb-2 block text-sm text-cyber-dim">Item</span>
-            <select className="input" required value={loanForm.item_id} onChange={(event) => setLoanForm({ ...loanForm, item_id: event.target.value })}>
-              <option value="">Select item</option>
-              {items.map((item) => (
-                <option key={item.id} value={item.id}>{item.name} / stock {item.quantity}</option>
-              ))}
-            </select>
-          </label>
+          <SelectField
+            label="Item"
+            value={loanForm.item_id}
+            placeholder="Select item"
+            onChange={(value) => setLoanForm({ ...loanForm, item_id: value })}
+            options={items.map((item) => ({
+              value: item.id,
+              label: `${item.name} / stock ${item.quantity}`,
+            }))}
+          />
           <Field label="Borrower Name" value={loanForm.borrower_name} onChange={(value) => setLoanForm({ ...loanForm, borrower_name: value })} />
           <Field label="Borrower Division" value={loanForm.borrower_division} onChange={(value) => setLoanForm({ ...loanForm, borrower_division: value })} />
           <Field label="Quantity" type="number" value={loanForm.quantity} onChange={(value) => setLoanForm({ ...loanForm, quantity: value })} />
-          <Field label="Borrow Date" type="datetime-local" value={loanForm.borrowed_at} onChange={(value) => setLoanForm({ ...loanForm, borrowed_at: value })} />
-          <Field label="Expected Return" type="datetime-local" value={loanForm.expected_return_at} onChange={(value) => setLoanForm({ ...loanForm, expected_return_at: value })} />
+          <DateTimeField label="Expected Return" value={loanForm.expected_return_at} onChange={(value) => setLoanForm({ ...loanForm, expected_return_at: value })} />
           <Textarea label="Notes" value={loanForm.notes} onChange={(value) => setLoanForm({ ...loanForm, notes: value })} />
+          <p className="rounded-lg border border-cyber-line bg-cyber-black/40 px-3 py-2 text-xs leading-5 text-cyber-dim">
+            Borrow time is recorded automatically when this request is submitted.
+          </p>
           <button className="btn-primary" disabled={loading}>Submit Request</button>
         </form>
       </Panel>

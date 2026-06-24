@@ -41,7 +41,7 @@ def serialize_user(document: Dict[str, Any]) -> Dict[str, Any]:
 def serialize_item(document: Dict[str, Any]) -> Dict[str, Any]:
     return {
         "id": document_id(document),
-        "sku": document["sku"],
+        "asset_id": document.get("asset_id") or document.get("sku", ""),
         "name": document["name"],
         "category": document["category"],
         "location": document["location"],

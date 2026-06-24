@@ -7,13 +7,13 @@ from app.utils import now_utc
 def build_item_document(payload: ItemCreate, created_by: ObjectId) -> dict:
     now = now_utc()
     return {
-        "sku": payload.sku.upper(),
+        "asset_id": payload.asset_id.upper(),
         "name": payload.name,
         "category": payload.category,
         "location": payload.location,
         "quantity": payload.quantity,
-        "incoming_at": payload.incoming_at,
-        "outgoing_at": payload.outgoing_at,
+        "incoming_at": payload.incoming_at or now,
+        "outgoing_at": None,
         "notes": payload.notes,
         "created_by": created_by,
         "created_at": now,

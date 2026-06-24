@@ -28,7 +28,10 @@ frontend/
 
 - Login dan register user dengan JWT.
 - Role `admin` dan `staff`.
-- Input barang: SKU, nama, kategori, lokasi, jumlah, tanggal masuk, tanggal keluar, dan catatan.
+- Input barang: Asset ID, nama, kategori, lokasi, jumlah, dan catatan.
+- Waktu masuk barang dicatat otomatis oleh backend saat item dibuat.
+- Waktu keluar barang dicatat otomatis ketika peminjaman disetujui.
+- Waktu pengembalian dicatat otomatis ketika barang ditandai returned.
 - Detail barang dengan informasi stok, tanggal, catatan, dan histori peminjaman.
 - Dashboard stok, pending approval, barang sedang dipinjam, dan low stock.
 - Request peminjaman: peminjam, divisi, jumlah, tanggal pinjam, target tanggal kembali.
@@ -95,7 +98,7 @@ Tampilan yang dipakai adalah dashboard operasional dark cyber dengan gaya sepert
 
 - Sidebar permanen untuk navigasi Dashboard, Inventory, Peminjaman, dan Approval.
 - Topbar dengan search, action icons, refresh, dan profile.
-- Dashboard overview dengan KPI cards, stock movement, top categories, alerts, activity feed, dan recent inventory.
+- Dashboard overview dengan KPI cards, operational alerts, pending approval queue, active loans, low stock list, dan recent inventory.
 - Latar monokrom gelap untuk fokus kerja dengan aksen cyan, green, amber, purple, dan red sebagai status operasional.
 - Tabel rapat agar data inventory mudah discan oleh user operasional.
 - Status chip untuk stok, approval, reject, dan returned.
